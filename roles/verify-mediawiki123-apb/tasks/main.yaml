@@ -1,7 +1,30 @@
 ---
+- pause:
+    seconds: 5
+    
 - name: url check for media wiki
   uri:
     url: "http://{{ route.route.spec.host }}"
     return_content: yes
   register: webpage
-  failed_when: webpage.status != 200
+
+- name: fail test result when webpage is 200 for now
+  asb_save_test_result:
+    fail: true
+    msg: unable to status of webpage is not 200
+  when: webpage.status != 200
+
+- name: fail
+  fail:
+    msg: unable to reach host on route.
+  when: webpage.status != 200
+
+- name: successful test result
+  asb_save_test_result:
+    msg: test passed media wiki route was reachable.
+  when: webpage.status == 200
+
+ 
+ 
+     
+ 
